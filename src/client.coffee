@@ -28,7 +28,7 @@ createPackageFile = ({ name }) ->
 createCoffeeFile = ({ build, api }) ->
   functions = (Object.keys api.functions).map (fn) ->
     if api.functions[fn].in
-      #createFunctionWithInput fn, api
+      createFunctionWithInput fn, api
     else
       createFunctionWithoutInput fn, api
 
@@ -41,13 +41,32 @@ createCoffeeFile = ({ build, api }) ->
     #{functions.join "\n\n"}
   """
 
+badResponse = 'the server responded with the status #{response.status}'
+
 createFunctionWithInput = (name, api) ->
+  """
+  #{create_validateInputOf name, api.functions[name].in}
+
+  #{create_validateOutputOf name, api.functions[name].out}
+
+  exports.#{name} = (input) ->
+    validateInputOf_#{name} input
+
+    response = await HTTP.post address,
+      fn: '#{name}'
+      in: input
+
+    if response.status is 200
+      output = response.data.out
+      validateOutputOf_#{name} output
+      output
+    else
+      throw "#{name}: #{badResponse}."
+  """
 
 createFunctionWithoutInput = (name, api) ->
-  badResponse = 'the server responded with the status #{response.status}'
-
   """
-  #{create_validateOutputOf name, api.functions[name].out, api.types}
+  #{create_validateOutputOf name, api.functions[name].out}
 
   exports.#{name} = ->
     response = await HTTP.post address, fn: '#{name}'
@@ -60,9 +79,20 @@ createFunctionWithoutInput = (name, api) ->
       throw "#{name}: #{badResponse}."
   """
 
-create_validateOutputOf = (fn, type, types) ->
-  badOutput = '#{value}:#{typeof value} was received'
+badValue = '#{value}:#{typeof value} was received'
 
+create_validateInputOf = (fn, type) ->
+  """
+  validateInputOf_#{fn} = (value) ->
+    error = no
+
+  #{createIfs({type}).indent()}
+
+    if error
+      throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
+  """
+
+create_validateOutputOf = (fn, type) ->
   """
   validateOutputOf_#{fn} = (value) ->
     error = no
@@ -70,5 +100,5 @@ create_validateOutputOf = (fn, type, types) ->
   #{createIfs({type}).indent()}
 
     if error
-      throw new TypeError "#{fn} requires #{type} output, but #{badOutput}."
+      throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
   """
