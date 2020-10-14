@@ -2,10 +2,11 @@ fs = require 'fs'
 
 { Validate } = require './validator'
 
-root = no
+root = ''
+createIfs = ->
 
 exports.createClient = (sources) ->
-  console.log 'from createCLient()'
+  createIfs = Validate sources.api.types
 
   createRootDirectory()
   createPackageFile sources.build
@@ -66,7 +67,7 @@ create_validateOutputOf = (fn, type, types) ->
   validateOutputOf_#{fn} = (value) ->
     error = no
 
-  #{Validate(types)({type}).indent()}
+  #{createIfs({type}).indent()}
 
     if error
       throw new TypeError "#{fn} requires #{type} output, but #{badOutput}."

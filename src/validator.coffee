@@ -35,7 +35,6 @@ exports.Validate = (types) ->
     """
 
   entry = (params) ->
-    console.log params
     params.value ?= 'value'
     type = params.type
 
