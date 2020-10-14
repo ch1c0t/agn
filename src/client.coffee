@@ -1,5 +1,7 @@
 fs = require 'fs'
 
+coffee = require 'coffeescript'
+
 { Validate } = require './validator'
 
 root = ''
@@ -11,11 +13,12 @@ exports.createClient = (sources) ->
   createRootDirectory()
   createPackageFile sources.build
   createCoffeeFile sources
+  createJSFile()
 
 createRootDirectory = ->
   root = "#{process.cwd()}/build/client"
   fs.mkdirSync root
-
+  
 createPackageFile = ({ name }) ->
   spec =
     name: "#{name}.client"
@@ -35,11 +38,16 @@ createCoffeeFile = ({ build, api }) ->
   fs.writeFileSync "#{root}/index.coffee", """
     axios = require 'axios'
 
-    address = #{build.address}
+    address = '#{build.address}'
     HTTP = axios
 
     #{functions.join "\n\n"}
   """
+
+createJSFile = ->
+  source = coffee.compile fs.readFileSync "#{root}/index.coffee", 'utf-8'
+  fs.writeFileSync "#{root}/index.js", source
+
 
 badResponse = 'the server responded with the status #{response.status}'
 
