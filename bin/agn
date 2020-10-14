@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+var path = require('path')
+var fs   = require('fs')
+
+var root = path.join(process.cwd(), 'node_modules/agn/lib')
+
+if (!fs.existsSync(root)) {
+  root = path.join(__dirname, '../lib')
+}
+
+require(root + '/cli').run()
