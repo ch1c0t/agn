@@ -66,7 +66,7 @@ create_validateOutputOf = (fn, type, types) ->
   validateOutputOf_#{fn} = (value) ->
     error = no
 
-  #{Validate({types})({type}).indent()}
+  #{Validate(types)({type}).indent()}
 
     if error
       throw new TypeError "#{fn} requires #{type} output, but #{badOutput}."

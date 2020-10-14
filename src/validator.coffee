@@ -1,6 +1,20 @@
-{ fun } = require './fun'
+exports.Validate = (types) ->
+  userTypes = types
+  userIf = ({ value, type }) ->
+    ifs = []
+    
+    for propName, propType of userTypes[type]
+      propNameVariable = "#{value}_#{propName}"
+      ifs.push """
+        unless #{value}.hasOwnProperty #{propName}
+          error = yes
 
-initTypes = ->
+        #{propNameVariable} = #{value}.#{propName}
+        #{entry value: propNameVariable, type: propType}
+      """
+
+    ifs.join "\n\n"
+
   arrayIf = ({ value, type }) ->
     value ?= 'value'
     elementType = type.slice 0, -2
@@ -20,24 +34,6 @@ initTypes = ->
       error = yes
     """
 
-  userTypes = @
-  console.log userTypes
-  userIf = ({ value, type }) ->
-    console.log userTypes
-    ifs = []
-    
-    for propName, propType of userTypes[type]
-      propNameVariable = "#{value}_#{propName}"
-      ifs.push """
-        unless #{value}.hasOwnProperty #{propName}
-          error = yes
-
-        #{propNameVariable} = #{value}.#{propName}
-        #{entry value: propNameVariable, type: propType}
-      """
-
-    ifs.join "\n\n"
-
   entry = (params) ->
     console.log params
     params.value ?= 'value'
@@ -51,10 +47,3 @@ initTypes = ->
       userIf params
 
   entry
-
-
-exports.Validate = fun
-  init:
-    types: initTypes
-  call: (params) ->
-    @types params
