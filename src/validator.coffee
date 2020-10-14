@@ -6,14 +6,21 @@ exports.Validate = (types) ->
     for propName, propType of userTypes[type]
       propNameVariable = "#{value}_#{propName}"
       ifs.push """
-        unless #{value}.hasOwnProperty #{propName}
+        unless #{value}.hasOwnProperty '#{propName}'
           error = yes
 
-        #{propNameVariable} = #{value}.#{propName}
+        #{propNameVariable} = #{value}['#{propName}']
         #{entry value: propNameVariable, type: propType}
       """
 
     ifs.join "\n\n"
+
+  coreTypes = ['Boolean', 'String']
+  coreIf = ({ value, type }) ->
+    """
+    if typeof #{value} isnt '#{type.toLowerCase()}'
+      error = yes
+    """
 
   arrayIf = ({ value, type }) ->
     value ?= 'value'
@@ -25,13 +32,6 @@ exports.Validate = (types) ->
 
     for element in #{value}
     #{entry(value: 'element', type: elementType).indent()}
-    """
-
-  coreTypes = ['Boolean', 'String']
-  coreIf = ({ value, type }) ->
-    """
-    if typeof #{value} isnt '#{type.toLowerCase()}'
-      error = yes
     """
 
   entry = (params) ->
