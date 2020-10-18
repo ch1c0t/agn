@@ -22,9 +22,8 @@ createRootDirectory = ->
 createPackageFile = ({ name }) ->
   spec =
     name: "#{name}.client"
-    version: '0.0.0'
     dependencies:
-      axios: 'latest'
+      axios: '*'
 
   fs.writeFileSync "#{root}/package.json", (JSON.stringify spec)
 
