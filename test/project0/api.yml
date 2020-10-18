@@ -1,0 +1,16 @@
+functions:
+  sendMessage:
+    in: Message
+    out: Boolean
+  getMailboxes:
+    out: Mailbox[]
+
+types:
+  Message:
+    to: String
+    from: String
+    subject: String
+    text: String
+  Mailbox:
+    name: String
+    path: String

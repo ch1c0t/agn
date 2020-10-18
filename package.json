@@ -4,10 +4,15 @@
   "version": "0.0.0",
   "bin": "./bin/agn",
   "scripts": {
-    "dev": "coffee --watch --compile --output lib src"
+    "dev": "coffee --watch --compile --output lib src",
+    "test": "coffee ./test/all.coffee"
   },
   "dependencies": {
     "coffeescript": "^2.5.1",
     "yaml": "^1.10.0"
+  },
+  "devDependencies": {
+    "axios": "^0.20.0",
+    "glob": "^7.1.6"
   }
 }
