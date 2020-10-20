@@ -27,7 +27,7 @@ exports.Validate = (types) ->
     elementType = type.slice 0, -2
 
     """
-    if typeof #{value} isnt 'array'
+    unless Array.isArray #{value}
       throw "#{value} is not an array"
 
     for element in #{value}
