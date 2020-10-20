@@ -52,9 +52,9 @@ badResponse = 'the server responded with the status #{response.status}'
 
 createFunctionWithInput = (name, api) ->
   """
-  #{create_validateInputOf name, api.functions[name].in}
+  #{createValidation(Of: "Input", fn: name, type: api.functions[name].in)}
 
-  #{create_validateOutputOf name, api.functions[name].out}
+  #{createValidation(Of: "Output", fn: name, type: api.functions[name].out)}
 
   exports.#{name} = (input) ->
     validateInputOf_#{name} input
@@ -73,7 +73,7 @@ createFunctionWithInput = (name, api) ->
 
 createFunctionWithoutInput = (name, api) ->
   """
-  #{create_validateOutputOf name, api.functions[name].out}
+  #{createValidation(Of: "Output", fn: name, type: api.functions[name].out)}
 
   exports.#{name} = ->
     response = await HTTP.post address, fn: '#{name}'
@@ -86,23 +86,11 @@ createFunctionWithoutInput = (name, api) ->
       throw "#{name}: #{badResponse}."
   """
 
-badValue = '#{value}:#{typeof value} was received. Error: #{error.toString()}'
+createValidation = ({ Of, fn, type }) ->
+  badValue = '#{value}:#{typeof value} was received. Error: #{error.toString()}'
 
-create_validateInputOf = (fn, type) ->
   """
-  validateInputOf_#{fn} = (value) ->
-    try
-      throw "no value" unless value?
-
-  #{createIfs({type}).indent(number: 4)}
-
-    catch error
-      throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
-  """
-
-create_validateOutputOf = (fn, type) ->
-  """
-  validateOutputOf_#{fn} = (value) ->
+  validate#{Of}Of_#{fn} = (value) ->
     try
       throw "no value" unless value?
 
