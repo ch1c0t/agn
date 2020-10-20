@@ -7,7 +7,7 @@ exports.Validate = (types) ->
       propNameVariable = "#{value}_#{propName}"
       ifs.push """
         unless #{value}.hasOwnProperty '#{propName}'
-          error = yes
+          throw "#{value} does not have prop '#{propName}'"
 
         #{propNameVariable} = #{value}['#{propName}']
         #{entry value: propNameVariable, type: propType}
@@ -19,7 +19,7 @@ exports.Validate = (types) ->
   coreIf = ({ value, type }) ->
     """
     if typeof #{value} isnt '#{type.toLowerCase()}'
-      error = yes
+      throw "#{value} is not #{type.toLowerCase()}"
     """
 
   arrayIf = ({ value, type }) ->
@@ -28,7 +28,7 @@ exports.Validate = (types) ->
 
     """
     if typeof #{value} isnt 'array'
-      error = yes
+      throw "#{value} is not an array"
 
     for element in #{value}
     #{entry(value: 'element', type: elementType).indent()}

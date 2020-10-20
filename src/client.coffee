@@ -86,26 +86,28 @@ createFunctionWithoutInput = (name, api) ->
       throw "#{name}: #{badResponse}."
   """
 
-badValue = '#{value}:#{typeof value} was received'
+badValue = '#{value}:#{typeof value} was received. Error: #{error.toString()}'
 
 create_validateInputOf = (fn, type) ->
   """
   validateInputOf_#{fn} = (value) ->
-    error = no
+    try
+      throw "no value" unless value?
 
-  #{createIfs({type}).indent()}
+  #{createIfs({type}).indent(number: 4)}
 
-    if error
+    catch error
       throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
   """
 
 create_validateOutputOf = (fn, type) ->
   """
   validateOutputOf_#{fn} = (value) ->
-    error = no
+    try
+      throw "no value" unless value?
 
-  #{createIfs({type}).indent()}
+  #{createIfs({type}).indent(number: 4)}
 
-    if error
+    catch error
       throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
   """
