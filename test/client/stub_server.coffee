@@ -33,7 +33,7 @@ listener = (request, response) ->
 
             [a, b]
           when 'sendMessage'
-            53
+            true
 
         response.setHeader 'Content-Type', 'application/json'
         response.statusCode = 200

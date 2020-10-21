@@ -1,8 +1,25 @@
-test 'in first', ->
-  eq 0, 0
-
-test 'client', ->
-  client = require '../project0/build/client'
-  console.log client
+client = require '../project0/build/client'
+console.log client
   
-  await client.getMailboxes()
+test 'getMailboxes: happy path', ->
+  mailboxes = await client.getMailboxes()
+
+  a =
+    name: 'A'
+    path: '/a'
+
+  b =
+    name: 'B'
+    path: '/b'
+
+  expected = [a, b]
+  eq mailboxes, expected
+
+test 'sendMessage: happy path', ->
+  isSent = await client.sendMessage
+    to: 'alice@email'
+    from: 'bob@email'
+    subject: 'Subject'
+    text: 'Body'
+
+  eq isSent, true
