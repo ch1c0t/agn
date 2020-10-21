@@ -26,7 +26,7 @@ after = ->
   process.on signal, after
 
 
-tests = []
+global.tests = []
 
 test = (name, fn) ->
   tests.push { name, fn }
@@ -39,13 +39,12 @@ global.eq = deepEqual
 start = ->
   await before()
 
-  glob = require 'glob'
-  console.log "#{process.cwd()}/test/**/*.test.coffee"
-  files = glob.sync "#{process.cwd()}/test/**/*.test.coffee"
-  console.log files
-  files.forEach require
+  #glob = require 'glob'
+  #files = glob.sync "#{process.cwd()}/test/**/*.test.coffee"
+  #files.forEach require
   
-  run()
+  { runClientTests } = require './client/setup.coffee'
+  runClientTests()
 
 run = ->
   tests.forEach (test) ->
