@@ -36,23 +36,18 @@ global.test = test
 { deepEqual } = require('assert').strict
 global.eq = deepEqual
 
-start = ->
+run = ->
   await before()
 
   #glob = require 'glob'
   #files = glob.sync "#{process.cwd()}/test/**/*.test.coffee"
   #files.forEach require
   
+  { runServerTests } = require './server/setup.coffee'
+  await runServerTests()
+  global.tests = []
+
   { runClientTests } = require './client/setup.coffee'
-  runClientTests()
+  await runClientTests()
 
-run = ->
-  tests.forEach (test) ->
-    try
-      test.fn()
-      console.log '✅', test.name
-    catch error
-      console.log '❌', test.name
-      console.log error.stack
-
-start()
+run()
