@@ -4,7 +4,7 @@ before = ->
   
   { spawn } = require 'child_process'
   new Promise (resolve, reject) ->
-    child = spawn '../../bin/agn'
+    child = spawn '../../bin/agn', ['build']
     process.chdir original
 
     child.on 'exit', resolve

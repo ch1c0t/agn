@@ -6,14 +6,20 @@ require './ext'
 { Server } = require './server'
 
 exports.run = ->
-  dir = "#{process.cwd()}/build"
-  fs.mkdirSync dir unless fs.existsSync dir
+  [_node, _agn, command, path] = process.argv
 
-  sources = getSources()
+  switch command
+    when 'build'
+      dir = "#{process.cwd()}/build"
+      fs.mkdirSync dir unless fs.existsSync dir
 
-  Server(sources)(dir: "#{dir}/server")
+      sources = getSources()
 
-  createClient sources
+      Server(sources)(dir: "#{dir}/server")
+
+      createClient sources
+    else
+      printHelp()
 
 getSources = ->
   cwd = process.cwd()
@@ -26,3 +32,6 @@ getSources = ->
     functions[name] = fs.readFileSync "#{cwd}/functions/#{name}.coffee", 'utf-8'
 
   { build, api, functions }
+
+printHelp = ->
+  console.log 'printHelp'
