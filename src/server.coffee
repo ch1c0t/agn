@@ -1,2 +1,8 @@
-exports.createServer = (sources) ->
-  console.log sources
+{ fun } = require './fun'
+
+exports.Server = fun
+  init:
+    api: -> @
+    functions: -> @
+  call: ({ dir }) ->
+    console.log dir

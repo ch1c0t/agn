@@ -3,15 +3,17 @@ YAML = require 'yaml'
 
 require './ext'
 { createClient } = require './client'
-{ createServer } = require './server'
+{ Server } = require './server'
 
 exports.run = ->
   dir = "#{process.cwd()}/build"
   fs.mkdirSync dir unless fs.existsSync dir
 
   sources = getSources()
+
+  Server(sources)(dir: "#{dir}/server")
+
   createClient sources
-  # createServer sources
 
 getSources = ->
   cwd = process.cwd()

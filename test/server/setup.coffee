@@ -1,6 +1,5 @@
 exports.runServerTests = ->
-  Promise.reject 'reject string'
-  #Promise.resolve true
+  Promise.resolve true
 
 runClientTests = ->
   require './client.test.coffee'
