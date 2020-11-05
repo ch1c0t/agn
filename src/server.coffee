@@ -2,7 +2,24 @@
 
 exports.Server = fun
   init:
-    api: -> @
-    functions: -> @
+    name: -> @
+    api: Api
+    functions: Functions
+  once: ->
+    @inside = (dir) ->
+      unsureDirExists dir
+
+      copy = clone @
+      copy.dir = dir
+      copy
+
   call: ({ dir }) ->
-    console.log dir
+    @inside(dir)
+      .createPackageFile()
+      .createCoffeeFile()
+      .createJSFile()
+
+Api = ->
+  { functions, types } = @
+
+Functions = ->
