@@ -1,7 +1,7 @@
 http = require 'http'
 
 host = '127.0.0.1'
-port = 4000
+port = 8080
 
 listener = (request, response) ->
   try
@@ -9,9 +9,6 @@ listener = (request, response) ->
       throw 'bad request'
 
     unless request.method is 'POST'
-      throw 'bad request'
-
-    unless request.url is '/api'
       throw 'bad request'
 
     data = ''

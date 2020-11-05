@@ -11,15 +11,15 @@ exports.createClient = (sources) ->
   createIfs = Validate sources.api.types
 
   createRootDirectory()
-  createPackageFile sources.build
-  createCoffeeFile sources
+  createPackageFile sources.name
+  createCoffeeFile sources.api
   createJSFile()
 
 createRootDirectory = ->
   root = "#{process.cwd()}/build/client"
   fs.mkdirSync root
   
-createPackageFile = ({ name }) ->
+createPackageFile = (name) ->
   spec =
     name: "#{name}.client"
     dependencies:
@@ -27,7 +27,9 @@ createPackageFile = ({ name }) ->
 
   fs.writeFileSync "#{root}/package.json", (JSON.stringify spec)
 
-createCoffeeFile = ({ build, api }) ->
+createCoffeeFile = (api) ->
+  address = 'http://localhost:8080'
+
   functions = (Object.keys api.functions).map (fn) ->
     if api.functions[fn].in
       createFunctionWithInput fn, api
@@ -37,7 +39,7 @@ createCoffeeFile = ({ build, api }) ->
   fs.writeFileSync "#{root}/index.coffee", """
     axios = require 'axios'
 
-    address = '#{build.address}'
+    address = '#{address}'
     HTTP = axios
 
     #{functions.join "\n\n"}

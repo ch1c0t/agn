@@ -6,14 +6,15 @@ require './ext'
 { Server } = require './server'
 
 exports.run = ->
-  [_node, _agn, command, path] = process.argv
+  [_node, _agn, command, file] = process.argv
 
   switch command
     when 'build'
       dir = "#{process.cwd()}/build"
-      fs.mkdirSync dir unless fs.existsSync dir
+      ensureDirExists dir
 
-      sources = getSources()
+      file ?= 'api.yml'
+      sources = getSources file
 
       Server(sources)(dir: "#{dir}/server")
 
@@ -21,17 +22,20 @@ exports.run = ->
     else
       printHelp()
 
-getSources = ->
-  cwd = process.cwd()
+getSources = (file) ->
+  name = file.split('.')[0]
 
-  build = YAML.parse fs.readFileSync "#{cwd}/build.yml", 'utf-8'
-  api = YAML.parse fs.readFileSync "#{cwd}/api.yml", 'utf-8'
+  cwd = process.cwd()
+  api = YAML.parse fs.readFileSync "#{cwd}/#{file}", 'utf-8'
 
   functions = {}
-  for name in (Object.keys api.functions)
-    functions[name] = fs.readFileSync "#{cwd}/functions/#{name}.coffee", 'utf-8'
+  for key in (Object.keys api.functions)
+    functions[key] = fs.readFileSync "#{cwd}/functions/#{key}.coffee", 'utf-8'
 
-  { build, api, functions }
+  { name, api, functions }
+
+ensureDirExists = (dir) ->
+  fs.mkdirSync dir unless fs.existsSync dir
 
 printHelp = ->
   console.log 'printHelp'
