@@ -1,4 +1,12 @@
+fs = require 'fs'
+
 { fun } = require './fun'
+{ ensureDirExists } = require './util'
+
+Api = ->
+  { functions, types } = @
+
+Functions = ->
 
 exports.Server = fun
   init:
@@ -6,20 +14,28 @@ exports.Server = fun
     api: Api
     functions: Functions
   once: ->
-    @inside = (dir) ->
-      unsureDirExists dir
+    @PackageContent = JSON.stringify
+      name: "#{@name}.server"
 
-      copy = clone @
+    @createPackageFile = ->
+      fs.writeFileSync "#{@dir}/package.json", @PackageContent
+
+    @createCoffeeFile = ->
+      console.log "from createCoffeeFile #{@dir}"
+
+    @createJSFile = ->
+      console.log "from createJSFile #{@dir}"
+
+    @inside = (dir, fn) ->
+      ensureDirExists dir
+
+      copy = Object.assign {}, @
       copy.dir = dir
-      copy
+
+      fn.call copy
 
   call: ({ dir }) ->
-    @inside(dir)
-      .createPackageFile()
-      .createCoffeeFile()
-      .createJSFile()
-
-Api = ->
-  { functions, types } = @
-
-Functions = ->
+    @inside dir, ->
+      @createPackageFile()
+      @createCoffeeFile()
+      @createJSFile()

@@ -5,6 +5,8 @@ require './ext'
 { createClient } = require './client'
 { Server } = require './server'
 
+{ ensureDirExists } = require './util'
+
 exports.run = ->
   [_node, _agn, command, file] = process.argv
 
@@ -33,9 +35,6 @@ getSources = (file) ->
     functions[key] = fs.readFileSync "#{cwd}/functions/#{key}.coffee", 'utf-8'
 
   { name, api, functions }
-
-ensureDirExists = (dir) ->
-  fs.mkdirSync dir unless fs.existsSync dir
 
 printHelp = ->
   console.log 'printHelp'
