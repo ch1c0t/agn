@@ -57,10 +57,11 @@ exports.Server = fun
       """
 
     listener = """
-      listener = (request, response) ->
+      (request, response) ->
         try
           unless request.method in ['POST', 'OPTIONS']
             throw 'bad request'
+
           response.setHeader 'Access-Control-Allow-Origin', '*'
 
           switch request.method
@@ -84,9 +85,7 @@ exports.Server = fun
     @CoffeeContent = """
       http = require 'http'
 
-      #{listener}
-      
-      server = http.createServer listener
+      server = http.createServer #{listener}
 
       PORT = process.env.PORT or 8080
       server.listen PORT, ->
