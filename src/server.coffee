@@ -28,13 +28,13 @@ exports.Server = fun
     api: Api
     functions: -> @
   once: ->
-    @PackageContent = JSON.stringify
+    @PackageSource = JSON.stringify
       name: "#{@name}.server"
     @createPackageFile = ->
-      fs.writeFileSync "#{@dir}/package.json", @PackageContent
+      fs.writeFileSync "#{@dir}/package.json", @PackageSource
 
 
-    @FnContent = {}
+    @FnSource = {}
     for fn in (Object.keys @functions)
       fnSource = if @api.functions[fn].in
         """
@@ -51,13 +51,13 @@ exports.Server = fun
         fn = #{@functions[fn]}
         """
 
-      @FnContent[fn] = coffee.compile fnSource
+      @FnSource[fn] = coffee.compile fnSource
 
     @createFnFiles = ->
       ensureDirExists "#{@dir}/functions"
 
       for fn in (Object.keys @functions)
-        fs.writeFileSync "#{@dir}/functions/#{fn}.js", @FnContent[fn]
+        fs.writeFileSync "#{@dir}/functions/#{fn}.js", @FnSource[fn]
 
 
 
@@ -108,7 +108,7 @@ exports.Server = fun
       #{catchBadRequest.indent number: 2}
     """
 
-    @CoffeeContent = """
+    @CoffeeSource = """
       http = require 'http'
 
       server = http.createServer #{listener}
@@ -120,8 +120,8 @@ exports.Server = fun
 
 
     @createServer = ->
-      fs.writeFileSync "#{@dir}/server.coffee", @CoffeeContent
-      fs.writeFileSync "#{@dir}/server.js", (coffee.compile @CoffeeContent)
+      fs.writeFileSync "#{@dir}/server.coffee", @CoffeeSource
+      fs.writeFileSync "#{@dir}/server.js", (coffee.compile @CoffeeSource)
 
     @inside = (dir, fn) ->
       ensureDirExists dir
