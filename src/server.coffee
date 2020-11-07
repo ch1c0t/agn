@@ -13,27 +13,53 @@ Api = ->
       pre = "when '#{fn}'"
 
       body = if functions[fn].in
-        "  await require('./#{fn}.js')(message.in)"
+        "  await require('./functions/#{fn}.js')(message.in)"
       else
-        "  await require('./#{fn}.js')()"
+        "  await require('./functions/#{fn}.js')()"
 
       "#{pre}\n#{body}"
     .join "\n"
 
   @
 
-Functions = ->
-
 exports.Server = fun
   init:
     name: -> @
     api: Api
-    functions: Functions
+    functions: -> @
   once: ->
     @PackageContent = JSON.stringify
       name: "#{@name}.server"
     @createPackageFile = ->
       fs.writeFileSync "#{@dir}/package.json", @PackageContent
+
+
+    @FnContent = {}
+    for fn in (Object.keys @functions)
+      fnSource = if @api.functions[fn].in
+        """
+        module.exports = (input) ->
+          fn(input)
+
+        fn = #{@functions[fn]}
+        """
+      else
+        """
+        module.exports = ->
+          fn()
+
+        fn = #{@functions[fn]}
+        """
+
+      @FnContent[fn] = coffee.compile fnSource
+
+    @createFnFiles = ->
+      ensureDirExists "#{@dir}/functions"
+
+      for fn in (Object.keys @functions)
+        fs.writeFileSync "#{@dir}/functions/#{fn}.js", @FnContent[fn]
+
+
 
     catchBadRequest = """
       catch error
@@ -92,10 +118,9 @@ exports.Server = fun
         console.log "The server is listening."
     """
 
-    @createCoffeeFile = ->
-      fs.writeFileSync "#{@dir}/server.coffee", @CoffeeContent
 
-    @createJSFile = ->
+    @createServer = ->
+      fs.writeFileSync "#{@dir}/server.coffee", @CoffeeContent
       fs.writeFileSync "#{@dir}/server.js", (coffee.compile @CoffeeContent)
 
     @inside = (dir, fn) ->
@@ -109,5 +134,5 @@ exports.Server = fun
   call: ({ dir }) ->
     @inside dir, ->
       @createPackageFile()
-      @createCoffeeFile()
-      @createJSFile()
+      @createFnFiles()
+      @createServer()
