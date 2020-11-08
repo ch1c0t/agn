@@ -2,26 +2,20 @@ exports.runServerTests = ->
   console.log "Preparing to run the server tests."
 
   server = await startServer()
+
+  require './server.test.coffee'
+  for test in tests
+    try
+      await test.fn()
+      console.log '✅', test.name
+    catch error
+      console.log '❌', test.name
+      console.log error
+
   await stopServer server
-  Promise.resolve true
 
   console.log "All the server tests pass."
   console.log "==========================\n\n"
-
-runClientTests = ->
-  require './client.test.coffee'
-
-  for test in tests
-    try
-      server = await startServer()
-
-      await test.fn()
-      console.log '✅', test.name
-
-      await stopServer server
-    catch error
-      console.log '❌', test.name
-      console.log error.stack
 
 startServer = ->
   { spawn } = require 'child_process'

@@ -1,3 +1,3 @@
-module.exports = (message) ->
+(message) ->
   console.log message
-  Promise.resolve false
+  Promise.resolve true

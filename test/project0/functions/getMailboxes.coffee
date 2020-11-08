@@ -1,4 +1,4 @@
-module.exports = ->
+->
   mailbox0 =
     name: 'm0'
     path: '/m0'
