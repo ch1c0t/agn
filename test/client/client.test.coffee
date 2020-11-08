@@ -1,5 +1,6 @@
 client = require '../project0/build/client'
 console.log client
+console.log()
   
 test 'getMailboxes: happy path', ->
   mailboxes = await client.getMailboxes()

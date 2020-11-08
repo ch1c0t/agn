@@ -1,4 +1,5 @@
 exports.runClientTests = ->
+  console.log 'Preparing to run the client tests.'
   require './client.test.coffee'
 
   for test in tests
@@ -12,6 +13,8 @@ exports.runClientTests = ->
     catch error
       console.log '❌', test.name
       console.log error.stack
+
+  console.log 'All the client tests pass.'
 
 startServer = ->
   { fork } = require 'child_process'
@@ -30,5 +33,6 @@ stopServer = (server) ->
 
   new Promise (resolve) ->
     server.on 'close', ->
-      console.log "Child has exited."
+      console.log "The stub server has been terminated."
+      console.log()
       resolve()

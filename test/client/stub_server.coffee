@@ -48,5 +48,5 @@ listener = (request, response) ->
 server = http.createServer listener
 
 server.listen port, host, ->
-  console.log "Server is running on http://#{host}:#{port}."
+  console.log "The stub server is running at http://#{host}:#{port}."
   process.send 'ready'
