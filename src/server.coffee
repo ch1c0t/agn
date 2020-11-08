@@ -75,6 +75,8 @@ exports.Server = fun
 
         out = switch message.fn
       #{@api.whenCases.indent number: 4}
+          else
+            throw 'bad request'
         
         response.setHeader 'Content-Type', 'application/json'
         response.statusCode = 200

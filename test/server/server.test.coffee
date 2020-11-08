@@ -30,3 +30,14 @@ test 'sendMessage: happy path', ->
 
   eq response.status, 200
   eq response.data, { out: true }
+
+test 'bad request: if the function is not defined', ->
+  checkResponse = (response) ->
+    eq response.status, 400
+    eq response.data, ''
+
+  try
+    response = await HTTP.post '/', fn: 'getMalboxes'
+    checkResponse response
+  catch error
+    checkResponse error.response
