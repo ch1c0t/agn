@@ -37,9 +37,10 @@ test 'sendMessage: happy path', ->
 expectBadRequest = (fn) ->
   try
     response = await fn()
+
     console.log()
     console.log response
-    fail "an expected exception was not thrown"
+    fail "an expected error was not thrown"
   catch error
     throw error if error instanceof AssertionError
 
@@ -49,7 +50,7 @@ expectBadRequest = (fn) ->
 
 test 'bad request: if the function is not defined', ->
   expectBadRequest ->
-    HTTP.post '/', fn: 'getMalboxes'
+    HTTP.post '/', fn: 'someNotDefinedName'
 
 test 'bad request: if the input is bad', ->
   expectBadRequest ->
