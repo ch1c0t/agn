@@ -31,13 +31,28 @@ test 'sendMessage: happy path', ->
   eq response.status, 200
   eq response.data, { out: true }
 
-test 'bad request: if the function is not defined', ->
-  checkResponse = (response) ->
+
+{ fail, AssertionError } = require('assert').strict
+
+expectBadRequest = (fn) ->
+  try
+    response = await fn()
+    console.log()
+    console.log response
+    fail "an expected exception was not thrown"
+  catch error
+    throw error if error instanceof AssertionError
+
+    response = error.response
     eq response.status, 400
     eq response.data, ''
 
-  try
-    response = await HTTP.post '/', fn: 'getMalboxes'
-    checkResponse response
-  catch error
-    checkResponse error.response
+test 'bad request: if the function is not defined', ->
+  expectBadRequest ->
+    HTTP.post '/', fn: 'getMalboxes'
+
+test 'bad request: if the input is bad', ->
+  expectBadRequest ->
+    HTTP.post '/',
+      fn: 'sendMessage'
+      in: 'bad input'
