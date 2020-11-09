@@ -21,6 +21,8 @@ startServer = ->
   { spawn } = require 'child_process'
   server = spawn 'node', ['./test/project0/build/server/server.js']
 
+  server.stderr.pipe process.stderr
+
   new Promise (resolve) ->
     server.stdout.on 'data', (data) ->
       if data.toString().startsWith 'The server is listening'

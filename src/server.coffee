@@ -4,9 +4,12 @@ coffee = require 'coffeescript'
 
 { fun } = require './fun'
 { ensureDirExists } = require './util'
+{ Validate } = require './validator'
 
 Api = ->
   { functions, types } = @
+
+  @createIfs = Validate types
 
   @whenCases = (Object.keys functions)
     .map (fn) ->
@@ -36,12 +39,20 @@ exports.Server = fun
 
     @FnSource = {}
     for fn in (Object.keys @functions)
-      fnSource = if @api.functions[fn].in
+      input = @api.functions[fn].in
+
+      fnSource = if input
         """
         module.exports = (input) ->
-          fn(input)
+          validateInput input
+          fn input
 
         fn = #{@functions[fn]}
+
+        validateInput = (value) ->
+          throw 'no value' unless value?
+
+        #{@api.createIfs(type: input).indent()}
         """
       else
         """
