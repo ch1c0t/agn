@@ -15,7 +15,7 @@ exports.Validate = (types) ->
 
     ifs.join "\n\n"
 
-  coreTypes = ['Boolean', 'String']
+  coreTypes = ['Boolean', 'String', 'Number']
   coreIf = ({ value, type }) ->
     """
     if typeof #{value} isnt '#{type.toLowerCase()}'

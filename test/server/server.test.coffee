@@ -31,6 +31,18 @@ test 'sendMessage: happy path', ->
   eq response.status, 200
   eq response.data, { out: true }
 
+test 'getNumber: happy path', ->
+  response = await HTTP.post '/', fn: 'getNumber'
+
+  eq response.status, 200
+  eq response.data, { out: 42 }
+
+test 'addOne: happy path', ->
+  response = await HTTP.post '/', fn: 'addOne', in: 2
+
+  eq response.status, 200
+  eq response.data, { out: 3 }
+
 
 { fail, AssertionError } = require('assert').strict
 
@@ -57,3 +69,9 @@ test 'bad request: if the input is bad', ->
     HTTP.post '/',
       fn: 'sendMessage'
       in: 'bad input'
+
+test 'bad request: when String was passed instead of Number', ->
+  expectBadRequest ->
+    HTTP.post '/',
+      fn: 'addOne'
+      in: '2'

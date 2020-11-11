@@ -4,6 +4,11 @@ functions:
     out: Boolean
   getMailboxes:
     out: Mailbox[]
+  getNumber:
+    out: Number
+  addOne:
+    in: Number
+    out: Number
 
 types:
   Message:
