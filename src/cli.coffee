@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 YAML = require 'yaml'
 
 require './ext'
@@ -8,15 +9,14 @@ require './ext'
 { ensureDirExists } = require './util'
 
 exports.run = ->
-  [_node, _agn, command, file] = process.argv
+  [_node, _agn, command] = process.argv
 
   switch command
     when 'build'
       dir = "#{process.cwd()}/build"
       ensureDirExists dir
 
-      file ?= 'api.yml'
-      sources = getSources file
+      sources = getSources()
 
       Server(sources)(dir: "#{dir}/server")
 
@@ -24,11 +24,11 @@ exports.run = ->
     else
       printHelp()
 
-getSources = (file) ->
-  name = file.split('.')[0]
-
+getSources = ->
   cwd = process.cwd()
-  api = YAML.parse fs.readFileSync "#{cwd}/#{file}", 'utf-8'
+  name = path.basename cwd
+
+  api = YAML.parse fs.readFileSync "#{cwd}/api.yml", 'utf-8'
 
   functions = {}
   for key in (Object.keys api.functions)
