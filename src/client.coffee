@@ -97,7 +97,7 @@ exports.Client = Generator
       fs.writeFileSync "#{@dir}/index.coffee", @CoffeeSource
       fs.writeFileSync "#{@dir}/index.js", (coffee.compile @CoffeeSource)
 
-  call: ({ dir }) ->
+  call: (dir) ->
     @inside dir, ->
       @createPackageFile()
       @createIndexFile()

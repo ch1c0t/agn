@@ -18,8 +18,8 @@ exports.run = ->
 
       sources = getSources()
 
-      Server(sources)(dir: "#{dir}/server")
-      Client(sources)(dir: "#{dir}/client")
+      Server(sources)("#{dir}/server")
+      Client(sources)("#{dir}/client")
     else
       printHelp()
 

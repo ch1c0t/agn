@@ -136,7 +136,7 @@ exports.Server = Generator
       fs.writeFileSync "#{@dir}/server.coffee", @CoffeeSource
       fs.writeFileSync "#{@dir}/server.js", (coffee.compile @CoffeeSource)
 
-  call: ({ dir }) ->
+  call: (dir) ->
     @inside dir, ->
       @createPackageFile()
       @createFnFiles()
