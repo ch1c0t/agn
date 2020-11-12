@@ -2,7 +2,7 @@ fs = require 'fs'
 
 coffee = require 'coffeescript'
 
-{ fun } = require './fun'
+{ Generator } = require './generator'
 { ensureDirExists } = require './util'
 { Validate } = require './validator'
 
@@ -79,7 +79,7 @@ Api = ->
 
   @
 
-exports.Client = fun
+exports.Client = Generator
   init:
     name: -> @
     api: Api
@@ -96,14 +96,6 @@ exports.Client = fun
     @createIndexFile = ->
       fs.writeFileSync "#{@dir}/index.coffee", @CoffeeSource
       fs.writeFileSync "#{@dir}/index.js", (coffee.compile @CoffeeSource)
-
-    @inside = (dir, fn) ->
-      ensureDirExists dir
-
-      copy = Object.assign {}, @
-      copy.dir = dir
-
-      fn.call copy
 
   call: ({ dir }) ->
     @inside dir, ->
