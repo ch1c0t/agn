@@ -101,3 +101,5 @@ exports.Client = Generator
     @inside dir, ->
       @createPackageFile()
       @createIndexFile()
+
+    console.log "Building the client at #{dir}."

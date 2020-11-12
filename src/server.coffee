@@ -141,3 +141,5 @@ exports.Server = Generator
       @createPackageFile()
       @createFnFiles()
       @createServer()
+
+    console.log "Building the server at #{dir}."

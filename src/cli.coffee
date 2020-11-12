@@ -1,11 +1,12 @@
 fs = require 'fs'
 path = require 'path'
+
 YAML = require 'yaml'
+chokidar = require 'chokidar'
 
 require './ext'
 { Client } = require './client'
 { Server } = require './server'
-
 { ensureDirExists } = require './util'
 
 cwd = process.cwd()
@@ -16,6 +17,18 @@ exports.run = ->
   switch command
     when 'build'
       build()
+    when 'watch'
+      build()
+
+      watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
+        persistent: true
+
+      watcher
+        .on 'all', (event, path) ->
+          console.log event, path
+        .on 'change', (path) ->
+          build()
+        .on 'add', (path) ->
     else
       printHelp()
 
