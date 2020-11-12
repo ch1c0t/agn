@@ -3,7 +3,7 @@ path = require 'path'
 YAML = require 'yaml'
 
 require './ext'
-{ createClient } = require './client'
+{ Client } = require './client'
 { Server } = require './server'
 
 { ensureDirExists } = require './util'
@@ -19,8 +19,7 @@ exports.run = ->
       sources = getSources()
 
       Server(sources)(dir: "#{dir}/server")
-
-      createClient sources
+      Client(sources)(dir: "#{dir}/client")
     else
       printHelp()
 

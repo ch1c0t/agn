@@ -2,102 +2,110 @@ fs = require 'fs'
 
 coffee = require 'coffeescript'
 
+{ fun } = require './fun'
+{ ensureDirExists } = require './util'
 { Validate } = require './validator'
 
-root = ''
-createIfs = ->
+Api = ->
+  @createIfs = Validate @types
+  @badResponse = 'the server responded with the status #{response.status}'
+  @createValidation = ({ Of, fn, type }) ->
+    badValue = '#{value}:#{typeof value} was received. Error: #{error.toString()}'
 
-exports.createClient = (sources) ->
-  createIfs = Validate sources.api.types
+    """
+    validate#{Of}Of_#{fn} = (value) ->
+      try
+        throw "no value" unless value?
 
-  createRootDirectory()
-  createPackageFile sources.name
-  createCoffeeFile sources.api
-  createJSFile()
+    #{@createIfs({type}).indent(number: 4)}
 
-createRootDirectory = ->
-  root = "#{process.cwd()}/build/client"
-  fs.mkdirSync root
-  
-createPackageFile = (name) ->
-  spec =
-    name: "#{name}.client"
-    dependencies:
-      axios: '*'
+      catch error
+        throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
+    """
 
-  fs.writeFileSync "#{root}/package.json", (JSON.stringify spec)
+  @createFunctionWithInput = (name) ->
+    """
+    #{@createValidation(Of: "Input", fn: name, type: @functions[name].in)}
 
-createCoffeeFile = (api) ->
-  address = 'http://localhost:8080'
+    #{@createValidation(Of: "Output", fn: name, type: @functions[name].out)}
 
-  functions = (Object.keys api.functions).map (fn) ->
-    if api.functions[fn].in
-      createFunctionWithInput fn, api
-    else
-      createFunctionWithoutInput fn, api
+    exports.#{name} = (input) ->
+      validateInputOf_#{name} input
 
-  fs.writeFileSync "#{root}/index.coffee", """
-    axios = require 'axios'
+      response = await HTTP.post address,
+        fn: '#{name}'
+        in: input
 
-    address = '#{address}'
-    HTTP = axios
+      if response.status is 200
+        output = response.data.out
+        validateOutputOf_#{name} output
+        output
+      else
+        throw "#{name}: #{@badResponse}."
+    """
 
-    #{functions.join "\n\n"}
-  """
+  @createFunctionWithoutInput = (name) ->
+    """
+    #{@createValidation(Of: "Output", fn: name, type: @functions[name].out)}
 
-createJSFile = ->
-  source = coffee.compile fs.readFileSync "#{root}/index.coffee", 'utf-8'
-  fs.writeFileSync "#{root}/index.js", source
+    exports.#{name} = ->
+      response = await HTTP.post address, fn: '#{name}'
 
+      if response.status is 200
+        output = response.data.out
+        validateOutputOf_#{name} output
+        output
+      else
+        throw "#{name}: #{@badResponse}."
+    """
 
-badResponse = 'the server responded with the status #{response.status}'
+  @createCoffeeSource = ->
+    address = 'http://localhost:8080'
 
-createFunctionWithInput = (name, api) ->
-  """
-  #{createValidation(Of: "Input", fn: name, type: api.functions[name].in)}
+    functions = (Object.keys @functions).map (fn) =>
+      if @functions[fn].in
+        @createFunctionWithInput fn
+      else
+        @createFunctionWithoutInput fn
 
-  #{createValidation(Of: "Output", fn: name, type: api.functions[name].out)}
+    """
+      axios = require 'axios'
 
-  exports.#{name} = (input) ->
-    validateInputOf_#{name} input
+      address = '#{address}'
+      HTTP = axios
 
-    response = await HTTP.post address,
-      fn: '#{name}'
-      in: input
+      #{functions.join "\n\n"}
+    """
 
-    if response.status is 200
-      output = response.data.out
-      validateOutputOf_#{name} output
-      output
-    else
-      throw "#{name}: #{badResponse}."
-  """
+  @
 
-createFunctionWithoutInput = (name, api) ->
-  """
-  #{createValidation(Of: "Output", fn: name, type: api.functions[name].out)}
+exports.Client = fun
+  init:
+    name: -> @
+    api: Api
+  once: ->
+    @PackageSource = JSON.stringify
+      name: "#{@name}.client"
+      dependencies:
+        axios: '*'
+    @createPackageFile = ->
+      fs.writeFileSync "#{@dir}/package.json", @PackageSource
 
-  exports.#{name} = ->
-    response = await HTTP.post address, fn: '#{name}'
+    @CoffeeSource = @api.createCoffeeSource()
 
-    if response.status is 200
-      output = response.data.out
-      validateOutputOf_#{name} output
-      output
-    else
-      throw "#{name}: #{badResponse}."
-  """
+    @createIndexFile = ->
+      fs.writeFileSync "#{@dir}/index.coffee", @CoffeeSource
+      fs.writeFileSync "#{@dir}/index.js", (coffee.compile @CoffeeSource)
 
-createValidation = ({ Of, fn, type }) ->
-  badValue = '#{value}:#{typeof value} was received. Error: #{error.toString()}'
+    @inside = (dir, fn) ->
+      ensureDirExists dir
 
-  """
-  validate#{Of}Of_#{fn} = (value) ->
-    try
-      throw "no value" unless value?
+      copy = Object.assign {}, @
+      copy.dir = dir
 
-  #{createIfs({type}).indent(number: 4)}
+      fn.call copy
 
-    catch error
-      throw new TypeError "#{fn} requires #{type} output, but #{badValue}."
-  """
+  call: ({ dir }) ->
+    @inside dir, ->
+      @createPackageFile()
+      @createIndexFile()
