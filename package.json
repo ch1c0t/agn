@@ -10,6 +10,7 @@
   "dependencies": {
     "chokidar": "^3.4.3",
     "coffeescript": "^2.5.1",
+    "nodemon": "^2.0.6",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
