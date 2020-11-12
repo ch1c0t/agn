@@ -8,23 +8,27 @@ require './ext'
 
 { ensureDirExists } = require './util'
 
+cwd = process.cwd()
+
 exports.run = ->
   [_node, _agn, command] = process.argv
 
   switch command
     when 'build'
-      dir = "#{process.cwd()}/build"
-      ensureDirExists dir
-
-      sources = getSources()
-
-      Server(sources)("#{dir}/server")
-      Client(sources)("#{dir}/client")
+      build()
     else
       printHelp()
 
+build = ->
+  dir = "#{cwd}/build"
+  ensureDirExists dir
+
+  sources = getSources()
+
+  Server(sources)("#{dir}/server")
+  Client(sources)("#{dir}/client")
+
 getSources = ->
-  cwd = process.cwd()
   name = path.basename cwd
 
   api = YAML.parse fs.readFileSync "#{cwd}/api.yml", 'utf-8'
