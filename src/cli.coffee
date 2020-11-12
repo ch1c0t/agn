@@ -18,17 +18,7 @@ exports.run = ->
     when 'build'
       build()
     when 'watch'
-      build()
-
-      watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
-        persistent: true
-
-      watcher
-        .on 'all', (event, path) ->
-          console.log event, path
-        .on 'change', (path) ->
-          build()
-        .on 'add', (path) ->
+      watch()
     else
       printHelp()
 
@@ -40,6 +30,18 @@ build = ->
 
   Server(sources)("#{dir}/server")
   Client(sources)("#{dir}/client")
+
+watch = ->
+  build()
+
+  watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
+    persistent: true
+    ignoreInitial: true
+
+  watcher
+    .on 'all', (event, path) ->
+      console.log event, path
+      build()
 
 getSources = ->
   name = path.basename cwd
