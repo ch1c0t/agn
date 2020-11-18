@@ -1,7 +1,6 @@
 fs = require 'fs'
 
 { Generator } = require './generator'
-{ ensureDirExists } = require './util'
 { Validate } = require './validator'
 { createMainFile } = require './server/main'
 { createFnFiles } = require './server/functions'
