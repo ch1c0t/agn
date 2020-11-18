@@ -44,13 +44,7 @@ watch = ->
       console.log event, path
       build()
 
-  nodemon(script: 'build/server/server.js')
-    .on 'start', ->
-      console.log 'nodemon started'
-    .on 'quit', ->
-      console.log 'nodemon quit'
-    .on 'restart', (files) ->
-      console.log "The server restarted due to: #{files}"
+  nodemon script: 'build/server/server.js'
 
 getSources = ->
   name = path.basename cwd
