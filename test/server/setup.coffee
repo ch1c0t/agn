@@ -19,7 +19,7 @@ exports.runServerTests = ->
 
 startServer = ->
   { spawn } = require 'child_process'
-  server = spawn 'node', ['./test/project0/build/server/server.js']
+  server = spawn 'node', ['./test/projects/project0/build/server/server.js']
 
   server.stderr.pipe process.stderr
 

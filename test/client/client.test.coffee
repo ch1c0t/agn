@@ -1,4 +1,4 @@
-client = require '../project0/build/client'
+client = require '../projects/project0/build/client'
 console.log client
 console.log()
   

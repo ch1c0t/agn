@@ -1,13 +1,13 @@
 before = ->
   original = process.cwd()
-  testProject = "#{process.cwd()}/test/project0"
+  testProject = "#{process.cwd()}/test/projects/project0"
   process.chdir testProject
 
   console.log "Preparing to build the test project at #{testProject}"
   
   { spawn } = require 'child_process'
   new Promise (resolve, reject) ->
-    child = spawn '../../bin/agn', ['build']
+    child = spawn '../../../bin/agn', ['build']
     process.chdir original
 
     child.stderr.pipe process.stderr
@@ -16,7 +16,7 @@ before = ->
 
 after = ->
   { rmdirSync } = require 'fs'
-  rmdirSync "#{process.cwd()}/test/project0/build", recursive: true
+  rmdirSync "#{process.cwd()}/test/projects/project0/build", recursive: true
 
 # https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits/14032965#14032965
 [
