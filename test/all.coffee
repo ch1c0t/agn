@@ -15,17 +15,7 @@ before = ->
     child.on 'error', reject
 
 require './setup/after.coffee'
-
-
-global.tests = []
-
-test = (name, fn) ->
-  tests.push { name, fn }
-
-global.test = test
-
-{ deepEqual } = require('assert').strict
-global.eq = deepEqual
+require './setup/global.coffee'
 
 run = ->
   await before()
