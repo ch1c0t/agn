@@ -5,10 +5,8 @@ projects = [
   'project_with_dependencies'
 ]
 
-root = "#{process.cwd()}/test/projects"
-
 exports.before = ->
-  console.log "Preparing to build the test projects at #{root}"
+  console.log "Preparing to build the test projects at #{PROJECTS_DIR}"
 
   promises = for project in projects
     build project
@@ -19,7 +17,7 @@ exports.before = ->
   console.log()
 
 build = (project) ->
-  path = "#{root}/#{project}"
+  path = "#{PROJECTS_DIR}/#{project}"
 
   new Promise (resolve, reject) ->
     child = exec '../../../bin/agn build',

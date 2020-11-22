@@ -1,6 +1,6 @@
-{ before } = require './setup/before.coffee'
-require './setup/after.coffee'
 require './setup/global.coffee'
+require './setup/after.coffee'
+{ before } = require './setup/before.coffee'
 
 run = ->
   await before()

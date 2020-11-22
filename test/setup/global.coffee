@@ -1,3 +1,5 @@
+global.PROJECTS_DIR = "#{process.cwd()}/test/projects"
+
 global.tests = []
 
 global.test = (name, fn) ->

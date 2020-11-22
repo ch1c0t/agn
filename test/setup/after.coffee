@@ -1,7 +1,5 @@
 { readdirSync, rmdirSync, existsSync } = require 'fs'
 
-PROJECTS_DIR = "#{process.cwd()}/test/projects"
-
 getDirectoriesWithin = (directory) ->
   readdirSync directory, withFileTypes: yes
     .filter (dirent) -> dirent.isDirectory()
