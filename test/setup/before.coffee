@@ -1,14 +1,9 @@
 { exec } = require 'child_process'
 
-projects = [
-  'project0'
-  'project_with_dependencies'
-]
-
 exports.before = ->
   console.log "Preparing to build the test projects at #{PROJECTS_DIR}"
 
-  promises = for project in projects
+  promises = for project in TEST_PROJECTS
     build project
 
   await Promise.all promises

@@ -1,9 +1,4 @@
-{ readdirSync, rmdirSync, existsSync } = require 'fs'
-
-getDirectoriesWithin = (directory) ->
-  readdirSync directory, withFileTypes: yes
-    .filter (dirent) -> dirent.isDirectory()
-    .map (dirent) -> dirent.name
+{ rmdirSync, existsSync } = require 'fs'
 
 deleteBuildIfExists = (name) ->
   path = "#{PROJECTS_DIR}/#{name}/build"
@@ -11,7 +6,7 @@ deleteBuildIfExists = (name) ->
     rmdirSync path, recursive: true
 
 after = ->
-  for name in (getDirectoriesWithin PROJECTS_DIR)
+  for name in TEST_PROJECTS
     deleteBuildIfExists name
 
 # https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits/14032965#14032965

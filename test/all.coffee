@@ -11,7 +11,6 @@ run = ->
   
   { runServerTests } = require './server/setup.coffee'
   await runServerTests()
-  global.tests = []
 
   { runClientTests } = require './client/setup.coffee'
   await runClientTests()

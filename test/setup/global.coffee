@@ -1,4 +1,13 @@
+{ readdirSync } = require 'fs'
+
+getDirectoriesWithin = (directory) ->
+  readdirSync directory, withFileTypes: yes
+    .filter (dirent) -> dirent.isDirectory()
+    .map (dirent) -> dirent.name
+
 global.PROJECTS_DIR = "#{process.cwd()}/test/projects"
+global.TEST_PROJECTS = getDirectoriesWithin PROJECTS_DIR
+
 
 global.tests = []
 
