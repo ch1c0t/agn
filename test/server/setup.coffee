@@ -2,6 +2,8 @@ exports.runServerTests = ->
   console.log "Preparing to run the server tests."
   console.log()
 
+  errors = no
+
   for project in TEST_PROJECTS
     console.log "#{project}:"
     server = await startServer project
@@ -12,12 +14,17 @@ exports.runServerTests = ->
         await test.fn()
         console.log '  ✅', test.name
       catch error
+        errors = yes
         console.log '  ❌', test.name
         console.log error
 
     global.tests = []
     await stopServer server
     console.log()
+
+  if errors
+    console.log 'One or more of the server tests have failed.'
+    process.exit(1)
 
   console.log "All the server tests pass."
   console.log "==========================\n\n"
