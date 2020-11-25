@@ -3,7 +3,7 @@ fs = require 'fs'
 { Generator } = require './generator'
 { Validate } = require './validator'
 { createMainFile } = require './server/main'
-{ createFnFiles } = require './server/functions'
+{ Fns, createFnFiles } = require './server/functions'
 
 Api = ->
   { functions, types } = @
@@ -28,7 +28,7 @@ exports.Server = Generator
   init:
     name: -> @
     api: Api
-    functions: -> @
+    functions: Fns
   once: ->
     @PackageSource = JSON.stringify
       name: "#{@name}.server"

@@ -7,3 +7,4 @@ test 'getHash: happy path', ->
     fn: 'getHash'
 
   eq response.status, 200
+  eq response.data, { out: 'ks/Os51X2RTtixTQ43ZD3geXrlY=' }
