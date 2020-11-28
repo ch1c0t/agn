@@ -14,3 +14,5 @@ test 'package.json', ->
   json = JSON.parse fs.readFileSync './test/projects/project_with_dependencies/build/server/package.json', 'utf-8'
 
   eq json.name, 'project_with_dependencies.server'
+  eq json.dependencies,
+    fco: '0.0.1'

@@ -1,3 +1,7 @@
+server:
+  dependencies:
+    fco: '0.0.1'
+
 functions:
   getHash:
     out: String

@@ -30,8 +30,13 @@ exports.Server = Generator
     api: Api
     functions: Fns
   once: ->
-    @PackageSource = JSON.stringify
-      name: "#{@name}.server"
+    @PackageSource = if @api.server?.dependencies
+      JSON.stringify
+        name: "#{@name}.server"
+        dependencies: @api.server.dependencies
+    else
+      JSON.stringify
+        name: "#{@name}.server"
     @createPackageFile = ->
       fs.writeFileSync "#{@dir}/package.json", @PackageSource
 
