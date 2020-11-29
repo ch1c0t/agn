@@ -1,13 +1,17 @@
 fs = require 'fs'
 
 exports.createPackageFile = ->
-  @PackageSource = if @api.server?.dependencies
-    JSON.stringify
-      name: "#{@name}.server"
-      dependencies: @api.server.dependencies
+  @PackageSource = if @dependencies = @api.server?.dependencies
+    JSON.stringify { @name, @dependencies }
   else
-    JSON.stringify
-      name: "#{@name}.server"
+    JSON.stringify { @name }
 
   @createPackageFile = ->
-    fs.writeFileSync "#{@dir}/package.json", @PackageSource
+    file = "#{@dir}/package.json"
+
+    if fs.existsSync file
+      { name, dependencies } = JSON.parse fs.readFileSync file, 'utf-8'
+      if (name is @name) and (dependencies is @dependencies)
+        return # early to not trigger 'npm install' unless necessary
+
+    fs.writeFileSync file, @PackageSource

@@ -33,7 +33,12 @@ build = ->
   Client(sources)("#{dir}/client")
 
 watch = ->
+  chokidar
+    .watch('build/server/package.json')
+    .on 'change', installPackages
+
   build()
+  installPackages()
 
   watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
     persistent: true
@@ -45,6 +50,12 @@ watch = ->
       build()
 
   nodemon script: 'build/server/server.js'
+
+{ exec } = require 'child_process'
+installPackages = ->
+  console.log 'installPackages'
+  exec 'npm install',
+    cwd: "#{process.cwd()}/build/server"
 
 getSources = ->
   name = path.basename cwd
