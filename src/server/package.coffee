@@ -1,10 +1,12 @@
 fs = require 'fs'
 
 exports.createPackageFile = ->
-  @PackageSource = if dependencies = @api.server?.dependencies
-    JSON.stringify { @name, dependencies }
+  spec = if dependencies = @api.server?.dependencies
+    { @name, dependencies }
   else
-    JSON.stringify { @name }
+    { @name }
+
+  @PackageSource = JSON.stringify spec, null, 2
 
   @createPackageFile = ->
     fs.writeFileSync "#{@dir}/package.json", @PackageSource

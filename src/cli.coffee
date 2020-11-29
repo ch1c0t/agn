@@ -10,9 +10,9 @@ require './ext'
 { Server } = require './server'
 { ensureDirExists, isNotEqual } = require './util'
 
-cwd = process.cwd()
-sources = {}
-previousDependencies = {}
+CWD = process.cwd()
+SOURCES = {}
+PREVIOUS_DEPENDENCIES = {}
 
 exports.run = ->
   [_node, _agn, command] = process.argv
@@ -26,13 +26,13 @@ exports.run = ->
       printHelp()
 
 build = ->
-  dir = "#{cwd}/build"
+  dir = "#{CWD}/build"
   ensureDirExists dir
 
-  sources = getSources()
+  SOURCES = getSources()
 
-  Server(sources)("#{dir}/server")
-  Client(sources)("#{dir}/client")
+  Server(SOURCES)("#{dir}/server")
+  Client(SOURCES)("#{dir}/client")
 
 watch = ->
   chokidar
@@ -40,7 +40,7 @@ watch = ->
     .on 'change', installPackagesIfNeeded
 
   build()
-  previousDependencies = sources.api.server?.dependencies
+  PREVIOUS_DEPENDENCIES = SOURCES.api.server?.dependencies
   installPackages()
 
   watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
@@ -58,24 +58,24 @@ watch = ->
 installPackages = ->
   console.log 'installPackages'
   exec 'npm install',
-    cwd: "#{process.cwd()}/build/server"
+    cwd: "#{CWD}/build/server"
 
 installPackagesIfNeeded = (path) ->
   console.log 'change', path
   
-  if currentDependencies = sources.api.server?.dependencies
-    if isNotEqual currentDependencies, previousDependencies
+  if currentDependencies = SOURCES.api.server?.dependencies
+    if isNotEqual currentDependencies, PREVIOUS_DEPENDENCIES
       installPackages()
-      previousDependencies = currentDependencies
+      PREVIOUS_DEPENDENCIES = currentDependencies
 
 getSources = ->
-  name = path.basename cwd
+  name = path.basename CWD
 
-  api = YAML.parse fs.readFileSync "#{cwd}/api.yml", 'utf-8'
+  api = YAML.parse fs.readFileSync "#{CWD}/api.yml", 'utf-8'
 
   functions = {}
   for key in (Object.keys api.functions)
-    functions[key] = fs.readFileSync "#{cwd}/functions/#{key}.coffee", 'utf-8'
+    functions[key] = fs.readFileSync "#{CWD}/functions/#{key}.coffee", 'utf-8'
 
   { name, api, functions }
 

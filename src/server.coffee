@@ -1,13 +1,13 @@
 { Generator } = require './generator'
 { createPackageFile } = require './server/package'
 { createMainFile } = require './server/main'
-{ Fns, createFnFiles } = require './server/functions'
+{ parseEntities, createFnFiles } = require './server/functions'
 
 exports.Server = Generator
   init:
     name: -> @
     api: -> @
-    functions: Fns
+    functions: parseEntities
   once: ->
     createPackageFile.call @
     createMainFile.call @

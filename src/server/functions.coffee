@@ -4,7 +4,7 @@ coffee = require 'coffeescript'
 { ensureDirExists } = require '../util'
 { Validate } = require '../validator'
 
-exports.Fns = ->
+exports.parseEntities = ->
   for fn in (Object.keys @)
     lines = @[fn].split("\n").reverse()
     index = lines.findIndex (line) ->
