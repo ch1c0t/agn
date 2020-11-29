@@ -1,17 +1,19 @@
-{ Generator } = require './generator'
+{ Creator } = require './creator'
 { createPackageFile } = require './server/package'
 { createMainFile } = require './server/main'
 { parseEntities, createFnFiles } = require './server/functions'
 
-exports.Server = Generator
+exports.Server = Creator
   init:
     name: -> @
     api: -> @
     functions: parseEntities
   once: ->
-    createPackageFile.call @
-    createMainFile.call @
-    createFnFiles.call @
+    @embed [
+      createPackageFile
+      createMainFile
+      createFnFiles
+    ]
 
   call: (dir) ->
     @inside dir, ->

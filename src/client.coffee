@@ -2,7 +2,7 @@ fs = require 'fs'
 
 coffee = require 'coffeescript'
 
-{ Generator } = require './generator'
+{ Creator } = require './creator'
 { ensureDirExists } = require './util'
 { Validate } = require './validator'
 
@@ -79,7 +79,7 @@ Api = ->
 
   @
 
-exports.Client = Generator
+exports.Client = Creator
   init:
     name: -> @
     api: Api

@@ -10,5 +10,9 @@ state =
 
     fn.call copy
 
-exports.Generator = (input) ->
+  embed: (fns) ->
+    for fn in fns
+      fn.call @
+
+exports.Creator = (input) ->
   fun { ...input, state }
