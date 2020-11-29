@@ -7,11 +7,4 @@ exports.createPackageFile = ->
     JSON.stringify { @name }
 
   @createPackageFile = ->
-    file = "#{@dir}/package.json"
-
-    if fs.existsSync file
-      source = fs.readFileSync file, 'utf-8'
-      if source is @PackageSource
-        return # early to not trigger 'npm install' unless necessary
-
-    fs.writeFileSync file, @PackageSource
+    fs.writeFileSync "#{@dir}/package.json", @PackageSource

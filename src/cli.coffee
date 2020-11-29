@@ -12,6 +12,7 @@ require './ext'
 
 cwd = process.cwd()
 sources = {}
+previousDependencies = {}
 
 exports.run = ->
   [_node, _agn, command] = process.argv
@@ -39,6 +40,7 @@ watch = ->
     .on 'change', installPackagesIfNeeded
 
   build()
+  previousDependencies = sources.api.server?.dependencies
   installPackages()
 
   watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
@@ -60,14 +62,11 @@ installPackages = ->
 
 installPackagesIfNeeded = (path) ->
   console.log 'change', path
-  { dependencies } = JSON.parse fs.readFileSync "#{cwd}/#{path}", 'utf-8'
   
-  console.log dependencies
-  console.log sources.api.server?.dependencies
-
-  if newDependencies = sources.api.server?.dependencies
-    if isNotEqual newDependencies, dependencies
+  if currentDependencies = sources.api.server?.dependencies
+    if isNotEqual currentDependencies, previousDependencies
       installPackages()
+      previousDependencies = currentDependencies
 
 getSources = ->
   name = path.basename cwd
