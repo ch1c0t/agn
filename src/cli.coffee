@@ -8,9 +8,10 @@ nodemon = require 'nodemon'
 require './ext'
 { Client } = require './client'
 { Server } = require './server'
-{ ensureDirExists } = require './util'
+{ ensureDirExists, isNotEqual } = require './util'
 
 cwd = process.cwd()
+sources = {}
 
 exports.run = ->
   [_node, _agn, command] = process.argv
@@ -35,7 +36,7 @@ build = ->
 watch = ->
   chokidar
     .watch('build/server/package.json')
-    .on 'change', installPackages
+    .on 'change', installPackagesIfNeeded
 
   build()
   installPackages()
@@ -56,6 +57,17 @@ installPackages = ->
   console.log 'installPackages'
   exec 'npm install',
     cwd: "#{process.cwd()}/build/server"
+
+installPackagesIfNeeded = (path) ->
+  console.log 'change', path
+  { dependencies } = JSON.parse fs.readFileSync "#{cwd}/#{path}", 'utf-8'
+  
+  console.log dependencies
+  console.log sources.api.server?.dependencies
+
+  if newDependencies = sources.api.server?.dependencies
+    if isNotEqual newDependencies, dependencies
+      installPackages()
 
 getSources = ->
   name = path.basename cwd
