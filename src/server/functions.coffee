@@ -2,6 +2,7 @@ fs = require 'fs'
 coffee = require 'coffeescript'
 
 { ensureDirExists } = require '../util'
+{ Validate } = require '../validator'
 
 exports.Fns = ->
   for fn in (Object.keys @)
@@ -18,6 +19,8 @@ exports.Fns = ->
   @
 
 exports.createFnFiles = ->
+  createIfs = Validate @api.types
+
   @FnSource = {}
   for fn in (Object.keys @functions)
     input = @api.functions[fn].in
@@ -34,7 +37,7 @@ exports.createFnFiles = ->
       validateInput = (value) ->
         throw 'no value' unless value?
 
-      #{@api.createIfs(type: input).indent()}
+      #{createIfs(type: input).indent()}
       """
     else
       """

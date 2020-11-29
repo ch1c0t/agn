@@ -1,45 +1,15 @@
-fs = require 'fs'
-
 { Generator } = require './generator'
-{ Validate } = require './validator'
+{ createPackageFile } = require './server/package'
 { createMainFile } = require './server/main'
 { Fns, createFnFiles } = require './server/functions'
-
-Api = ->
-  { functions, types } = @
-
-  @createIfs = Validate types
-
-  @whenCases = (Object.keys functions)
-    .map (fn) ->
-      pre = "when '#{fn}'"
-
-      body = if functions[fn].in
-        "  await require('./functions/#{fn}.js')(message.in)"
-      else
-        "  await require('./functions/#{fn}.js')()"
-
-      "#{pre}\n#{body}"
-    .join "\n"
-
-  @
 
 exports.Server = Generator
   init:
     name: -> @
-    api: Api
+    api: -> @
     functions: Fns
   once: ->
-    @PackageSource = if @api.server?.dependencies
-      JSON.stringify
-        name: "#{@name}.server"
-        dependencies: @api.server.dependencies
-    else
-      JSON.stringify
-        name: "#{@name}.server"
-    @createPackageFile = ->
-      fs.writeFileSync "#{@dir}/package.json", @PackageSource
-
+    createPackageFile.call @
     createMainFile.call @
     createFnFiles.call @
 

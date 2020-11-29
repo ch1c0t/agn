@@ -9,13 +9,25 @@ exports.createMainFile = ->
       response.end()
   """
 
+  whenCases = (Object.keys @api.functions)
+    .map (fn) =>
+      pre = "when '#{fn}'"
+
+      body = if @api.functions[fn].in
+        "  await require('./functions/#{fn}.js')(message.in)"
+      else
+        "  await require('./functions/#{fn}.js')()"
+
+      "#{pre}\n#{body}"
+    .join "\n"
+
   requestEnd = =>
     """
     try
       message = JSON.parse data
 
       out = switch message.fn
-    #{@api.whenCases.indent number: 4}
+    #{whenCases.indent number: 4}
         else
           throw 'bad request'
       
