@@ -44,34 +44,20 @@ test 'addOne: happy path', ->
   eq response.data, { out: 3 }
 
 
-{ fail, AssertionError } = require('assert').strict
-
-expectBadRequest = (fn) ->
-  try
-    response = await fn()
-
-    console.log()
-    console.log response
-    fail "an expected error was not thrown"
-  catch error
-    throw error if error instanceof AssertionError
-
-    response = error.response
-    eq response.status, 400
-    eq response.data, ''
+{ expectBadRequest } = require './common'
 
 test 'bad request: if the function is not defined', ->
-  expectBadRequest ->
+  expectBadRequest status: 400, ->
     HTTP.post '/', fn: 'someNotDefinedName'
 
 test 'bad request: if the input is bad', ->
-  expectBadRequest ->
+  expectBadRequest status: 400, ->
     HTTP.post '/',
       fn: 'sendMessage'
       in: 'bad input'
 
 test 'bad request: when String was passed instead of Number', ->
-  expectBadRequest ->
+  expectBadRequest status: 400, ->
     HTTP.post '/',
       fn: 'addOne'
       in: '2'
