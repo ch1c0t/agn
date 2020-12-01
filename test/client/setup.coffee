@@ -14,7 +14,9 @@ exports.runClientTests = ->
       console.log '❌', test.name
       console.log error.stack
 
+  global.tests = []
   console.log 'All the client tests pass.'
+  console.log "==========================\n\n"
 
 startServer = ->
   { fork } = require 'child_process'

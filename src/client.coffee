@@ -32,7 +32,7 @@ Api = ->
     exports.#{name} = (input) ->
       validateInputOf_#{name} input
 
-      response = await HTTP.post address,
+      response = await HTTP.post '/',
         fn: '#{name}'
         in: input
 
@@ -49,7 +49,7 @@ Api = ->
     #{@createValidation(Of: "Output", fn: name, type: @functions[name].out)}
 
     exports.#{name} = ->
-      response = await HTTP.post address, fn: '#{name}'
+      response = await HTTP.post '/', fn: '#{name}'
 
       if response.status is 200
         output = response.data.out
@@ -71,8 +71,15 @@ Api = ->
     """
       axios = require 'axios'
 
-      address = '#{address}'
-      HTTP = axios
+      HTTP = axios.create
+        baseURL: '#{address}'
+
+      exports.SET_ADDRESS = (address) ->
+        HTTP.defaults.baseURL = address
+
+      exports.SET_TOKEN = (token) ->
+        header = 'Bearer' + ' ' + token
+        HTTP.defaults.headers.common['Authorization'] = header
 
       #{functions.join "\n\n"}
     """

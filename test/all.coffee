@@ -15,4 +15,7 @@ run = ->
   { runClientTests } = require './client/setup.coffee'
   await runClientTests()
 
+  { runIntegrationTests } = require './integration/setup.coffee'
+  await runIntegrationTests()
+
 run()
