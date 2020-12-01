@@ -55,6 +55,8 @@ exports.createMainFile = ->
             unless request.headers['content-type']?.startsWith 'application/json'
               throw 'bad request'
 
+    #{if @auth? then (@auth.check.indent number: 8) else ''}
+
             data = ''
             request.on 'data', (chunk) ->
               data += chunk
@@ -67,6 +69,8 @@ exports.createMainFile = ->
     http = require 'http'
 
     server = http.createServer #{listener}
+
+    #{if @auth? then @auth.define else ''}
 
     PORT = process.env.PORT or 8080
     server.listen PORT, ->

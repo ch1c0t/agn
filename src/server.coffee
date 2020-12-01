@@ -2,12 +2,14 @@
 { createPackageFile } = require './server/package'
 { createMainFile } = require './server/main'
 { parseEntities, createFnFiles } = require './server/functions'
+{ auth } = require './server/auth'
 
 exports.Server = Creator
   init:
     name: -> @
     api: -> @
     functions: parseEntities
+    auth: auth
   once: ->
     @embed [
       createPackageFile

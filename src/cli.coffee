@@ -77,7 +77,11 @@ getSources = ->
   for key in (Object.keys api.functions)
     functions[key] = fs.readFileSync "#{CWD}/functions/#{key}.coffee", 'utf-8'
 
-  { name, api, functions }
+  verify = "#{CWD}/auth/verifyToken.coffee"
+  if fs.existsSync verify
+    auth = fs.readFileSync verify, 'utf-8'
+
+  { name, api, functions, auth }
 
 printHelp = ->
   console.log 'printHelp'
