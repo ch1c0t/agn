@@ -1,7 +1,7 @@
 {
   "name": "agn",
-  "description": "A simple RPC generator",
-  "version": "0.0.0",
+  "description": "A tool for API development",
+  "version": "0.0.1",
   "bin": "./bin/agn",
   "scripts": {
     "dev": "coffee --watch --compile --output lib src",
