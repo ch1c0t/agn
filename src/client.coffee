@@ -93,6 +93,7 @@ exports.Client = Creator
   once: ->
     @PackageSource = JSON.stringify
       name: "#{@name}.client"
+      version: '0.0.0'
       dependencies:
         axios: '*'
     @createPackageFile = ->
