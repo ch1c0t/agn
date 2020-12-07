@@ -12,7 +12,6 @@ require './ext'
 
 CWD = process.cwd()
 SOURCES = {}
-PREVIOUS_DEPENDENCIES = {}
 
 exports.run = ->
   [_node, _agn, command] = process.argv
@@ -35,15 +34,9 @@ build = ->
   Client(SOURCES)("#{dir}/client")
 
 watch = ->
-  chokidar
-    .watch('build/server/package.json')
-    .on 'change', installPackagesIfNeeded
-
   build()
-  PREVIOUS_DEPENDENCIES = SOURCES.api.server?.dependencies
-  installPackages()
 
-  watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee'],
+  watcher = chokidar.watch ['api.yml', 'functions/**/*.coffee', 'package.json'],
     persistent: true
     ignoreInitial: true
 
@@ -53,20 +46,6 @@ watch = ->
       build()
 
   nodemon script: 'build/server/server.js'
-
-{ exec } = require 'child_process'
-installPackages = ->
-  console.log 'installPackages'
-  exec 'npm install',
-    cwd: "#{CWD}/build/server"
-
-installPackagesIfNeeded = (path) ->
-  console.log 'change', path
-  
-  if currentDependencies = SOURCES.api.server?.dependencies
-    if isNotEqual currentDependencies, PREVIOUS_DEPENDENCIES
-      installPackages()
-      PREVIOUS_DEPENDENCIES = currentDependencies
 
 getSources = ->
   name = path.basename CWD

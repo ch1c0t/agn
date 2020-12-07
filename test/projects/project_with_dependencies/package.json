@@ -1,0 +1,9 @@
+{
+  "name": "project_with_dependencies",
+  "devDependencies": {
+    "agn": "file:../../.."
+  },
+  "dependencies": {
+    "fco": "0.0.1"
+  }
+}
