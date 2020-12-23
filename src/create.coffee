@@ -16,7 +16,7 @@ exports.create = (name) ->
     name: name
     version: '0.0.0'
     devDependencies:
-      makeapi: '0.0.0'
+      makeapi: '0.1.0'
 
   createPackageFile spec
   createApiYml()

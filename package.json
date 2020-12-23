@@ -1,7 +1,7 @@
 {
   "name": "makeapi",
   "description": "A tool for API development",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "bin": "./bin/makeapi",
   "scripts": {
     "dev": "coffee --watch --compile --output lib src",
