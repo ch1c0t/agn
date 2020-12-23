@@ -1,4 +1,7 @@
 fs = require 'fs'
+{ exec  } = require 'child_process'
+
+YAML = require 'yaml'
 
 CWD = process.cwd()
 DIR = "/tmp/makeapi/path"
@@ -10,17 +13,21 @@ exports.create = (name) ->
     console.error "#{DIR} already exists."
     process.exit 1
   else
+    console.log "Creating a new project inside of #{DIR}"
     fs.mkdirSync DIR
   
   spec =
     name: name
     version: '0.0.0'
     devDependencies:
-      makeapi: '0.1.0'
+      makeapi: '0.1.1'
 
   createPackageFile spec
   createApiYml()
   createFunctions()
+
+  console.log "Running 'npm install'"
+  exec 'npm install', cwd: DIR
 
 createPackageFile = (spec) ->
   source = JSON.stringify spec, null, 2
