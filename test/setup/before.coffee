@@ -15,7 +15,7 @@ build = (project) ->
   path = "#{PROJECTS_DIR}/#{project}"
 
   new Promise (resolve, reject) ->
-    child = exec '../../../bin/agn build',
+    child = exec '../../../bin/makeapi build',
       cwd: path
 
     child.stderr.pipe process.stderr
