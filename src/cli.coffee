@@ -21,6 +21,8 @@ exports.run = ->
       build()
     when 'watch'
       watch()
+    when 'help'
+      printHelp()
     else
       printHelp()
 
@@ -63,4 +65,11 @@ getSources = ->
   { name, api, functions, auth }
 
 printHelp = ->
-  console.log 'printHelp'
+  console.log """
+    A tool for API development
+
+      new project_name    Create the directory named "project_name" and a new project inside of it.
+      build               Build the project inside of the dist directory.
+      watch               Watch for changes and rebuild the project continuously.
+      help                Show this message.
+  """
