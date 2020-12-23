@@ -19,8 +19,10 @@ exports.create = (name) ->
   spec =
     name: name
     version: '0.0.0'
+    scripts:
+      start: 'agn watch'
     devDependencies:
-      makeapi: '0.1.1'
+      agn: '0.1.2'
 
   createPackageFile spec
   createApiYml()
