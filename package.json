@@ -1,8 +1,8 @@
 {
-  "name": "makeapi",
+  "name": "agn",
   "description": "A tool for API development",
   "version": "0.1.0",
-  "bin": "./bin/makeapi",
+  "bin": "./bin/agn",
   "scripts": {
     "dev": "coffee --watch --compile --output lib src",
     "test": "coffee ./test/all.coffee"

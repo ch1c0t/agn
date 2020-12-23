@@ -3,7 +3,7 @@
 var path = require('path')
 var fs   = require('fs')
 
-var root = path.join(process.cwd(), 'node_modules/makeapi/lib')
+var root = path.join(process.cwd(), 'node_modules/agn/lib')
 
 if (!fs.existsSync(root)) {
   root = path.join(__dirname, '../lib')
