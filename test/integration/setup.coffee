@@ -28,7 +28,7 @@ startServer = ({ project, port }) ->
   { spawn } = require 'child_process'
 
   env = { ...process.env, PORT: port }
-  server = spawn 'node', ["#{PROJECTS_DIR}/#{project}/build/server/server.js"], { env }
+  server = spawn 'node', ["#{PROJECTS_DIR}/#{project}/dist/server/server.js"], { env }
 
   server.stderr.pipe process.stderr
 

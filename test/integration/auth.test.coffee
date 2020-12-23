@@ -12,7 +12,7 @@ test 'the server is up', ->
   eq response.data, { out: 42 }
 
 test 'the client is capable', ->
-  client = require '../projects/project_with_auth/build/client'
+  client = require '../projects/project_with_auth/dist/client'
   console.log client
 
   { getProtected, SET_ADDRESS, SET_TOKEN } = client

@@ -1,7 +1,7 @@
 { rmdirSync, existsSync } = require 'fs'
 
 deleteBuildIfExists = (name) ->
-  path = "#{PROJECTS_DIR}/#{name}/build"
+  path = "#{PROJECTS_DIR}/#{name}/dist"
   if existsSync path
     rmdirSync path, recursive: true
 

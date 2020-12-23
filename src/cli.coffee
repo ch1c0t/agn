@@ -25,7 +25,7 @@ exports.run = ->
       printHelp()
 
 build = ->
-  dir = "#{CWD}/build"
+  dir = "#{CWD}/dist"
   ensureDirExists dir
 
   SOURCES = getSources()
@@ -45,7 +45,7 @@ watch = ->
       console.log event, path
       build()
 
-  nodemon script: 'build/server/server.js'
+  nodemon script: 'dist/server/server.js'
 
 getSources = ->
   name = path.basename CWD

@@ -31,7 +31,7 @@ exports.runServerTests = ->
 
 startServer = (project) ->
   { spawn } = require 'child_process'
-  server = spawn 'node', ["#{PROJECTS_DIR}/#{project}/build/server/server.js"]
+  server = spawn 'node', ["#{PROJECTS_DIR}/#{project}/dist/server/server.js"]
 
   server.stderr.pipe process.stderr
 
