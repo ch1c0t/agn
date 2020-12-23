@@ -9,6 +9,7 @@ require './ext'
 { Client } = require './client'
 { Server } = require './server'
 { ensureDirExists, isNotEqual } = require './util'
+{ create } = require './create'
 
 CWD = process.cwd()
 SOURCES = {}
@@ -21,6 +22,9 @@ exports.run = ->
       build()
     when 'watch'
       watch()
+    when 'new'
+      name = process.argv[3]
+      create name
     when 'help'
       printHelp()
     else
