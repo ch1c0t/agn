@@ -1,17 +1,17 @@
 ## Introduction
 
-`makeapi` is a tool for API development, which can generate an API server and its client from a single specification.
+`agn` is a tool for API development, which can generate an API server and its client from a single specification.
 
 You can install it globally with
 
 ```
-npm install makeapi -g
+npm install agn -g
 ```
 
 and then use
 
 ```
-makeapi new name0
+agn new name0
 ```
 
 to create the directory named "name0" and a new project inside of it.
@@ -39,7 +39,7 @@ number = await getNumber()
 
 ## Development
 
-To work on `makeapi` itself, run `npm run dev` in this repository. 
+To work on `agn` itself, run `npm run dev` in this repository.
 
 To run the tests:
 
